@@ -66,7 +66,7 @@ class Classic extends React.Component {
         const { categories, subcategories } = this.state;
 
         if (!categories[id] || !subcategories[id]) {
-            return 'Loading...';
+            return <div className="loading">Loading...</div>;
         }
         
         const category = categories[id];

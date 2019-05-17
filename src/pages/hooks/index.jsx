@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import keyBy from 'lodash/keyBy';
 import { Link } from 'react-router-dom';
 
-function Hooks({ match }) {
+const useCategoryData = id => {
     const [categories, setCategories] = useState({});
     const [subcategories, setSubcategories] = useState({});
-    const { id } = match.params;
 
     const loadCategory = async () => {
         const categoryResponse = await fetch(`http://localhost:3000/api/categories/${id}`);
@@ -40,13 +39,16 @@ function Hooks({ match }) {
         loadSubcategories();
     }, [id]);
 
-    const category = categories[id];
+    return [categories[id], subcategories[id] && subcategories[id].map(x => categories[x])];
+};
 
-    if (!category || !subcategories[id]) {
-        return 'Loading...';
+function Hooks({ match }) {
+    const { id } = match.params;
+    const [category, subcategories] = useCategoryData(id);
+
+    if (!category || !subcategories) {
+        return <div className="loading">Loading...</div>;
     }
-
-    const subcategoriesList = subcategories[id].map(x => categories[x]);
 
     return (
         <div>
@@ -54,15 +56,15 @@ function Hooks({ match }) {
                 <h1>{ category.name }</h1>
 
                 <ul>
-                    { subcategoriesList.map(x => 
+                    { subcategories.map(x => 
                         <li key={ x.id }>
-                            <Link to={ `/classic/${x.id}` }>{ x.name }</Link>
+                            <Link to={ `/hooks/${x.id}` }>{ x.name }</Link>
                         </li>    
                     )}
                 </ul>
 
                 { category.parent !== 'shop' &&
-                    <Link to={ `/classic/${category.parent}` } className="button">
+                    <Link to={ `/hooks/${category.parent}` } className="button">
                         Up
                     </Link>
                 }
