@@ -1,25 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+import Classic from './pages/classic';
+import Hooks from './pages/hooks';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <Router>
+      <header>
+        <Link className="button" to="/classic/furniture">Classic</Link>
+        <Link className="button" to="/hooks/furniture">Hooks</Link>
       </header>
-    </div>
+      
+      <Route exact path="/classic" component={Classic} />
+      <Route exact path="/classic/:id" component={Classic} />
+      <Route exact path="/hooks" component={Hooks} />
+      <Route exact path="/hooks/:id" component={Hooks} />
+    </Router>
   );
 }
 
